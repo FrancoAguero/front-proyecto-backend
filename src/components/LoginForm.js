@@ -1,24 +1,50 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from '../hooks/useForm';
-import {  } from '../store/apis'
+import { useLoginUserMutation } from '../store/apis'
 
 const LoginForm = () => {
+  const user = localStorage.getItem("userData")
 
+  const [ loginUser ] = useLoginUserMutation()
 
+  const navigate = useNavigate()
+  
   const [formValues, handleInputChange, reset] = useForm({
-    email: "",
+    username: "",
     password: "",
   });
 
   const { 
-    email,
+    username,
     password,
   } = formValues
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    try {
+      const response = await loginUser(formValues).unwrap() 
 
+      localStorage.setItem("userData", JSON.stringify( response ))
+
+      navigate("/", {
+        replace: true
+      })
+
+    } catch(error) {
+      console.log("%%%%%", error)
+    }
   };
+
+
+  useEffect(() => {
+    if(user) {
+      navigate("/", {
+        replace: true
+      })
+    }
+  }, [])
+
 
   return (
     <div className="card shadow-lg">
@@ -35,8 +61,8 @@ const LoginForm = () => {
                 <input 
                   type="email" 
                   className="form-control" 
-                  name="email"
-                  value={email}
+                  name="username"
+                  value={username}
                   onChange={handleInputChange}/>
               </div>
 
@@ -51,9 +77,10 @@ const LoginForm = () => {
               </div>
 
             </div>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary col-12">
               Ingresar
             </button>
+            <span className="col-12">* si no tiene cuenta debe <Link to="/signup">registrarse</Link></span>
           </div>
         </form>
       </div>

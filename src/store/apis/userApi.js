@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const userApi = createApi({
   reducerPath: "user",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://localhost:8080/api/users`
+    baseUrl: `https://backend-ecommerce-coder.herokuapp.com/api/users`
   }),
 
   endpoints: (builder) => ({
@@ -11,12 +11,19 @@ export const userApi = createApi({
       query: (body) => ({ 
         url: "/register",
         method: "POST",
-        body
+        body,
+      })
+    }),
+    loginUser: builder.mutation({
+      query: (body) => ({
+        url: "/login",
+        method: "POST",
+        body,
       })
     })
   })
 });
 
 
-export const { usePostUserRegisterMutation } = userApi;
+export const { usePostUserRegisterMutation, useLoginUserMutation } = userApi;
 

@@ -1,34 +1,75 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm';
-import { usePostUserRegisterMutation } from '../store/apis'
+import { usePostUserRegisterMutation, useLoginUserMutation, useCreateNewCartMutation } from '../store/apis'
 
 const SignUpForm = () => {
+  const user = localStorage.getItem("userData")
+
+  let navigate = useNavigate()
+
   const  [ postUserRegister ]  = usePostUserRegisterMutation()
 
-  const [formValues, handleInputChange, handleInputChangeImg, reset] = useForm({
-    email: "",
+  const [ loginUser ] = useLoginUserMutation() 
+
+  const [ createNewCart ] = useCreateNewCartMutation()
+
+  const [ formValues, handleInputChange, handleInputChangeImg ] = useForm({
+    mail: "",
     password: "",
-    name: "",
-    adress: "",
-    age: "",
-    num: "",
-    img: "",
+    nombre: "",
+    direccion: "",
+    edad: "",
+    numTelefono: "",
+    image: "",
   });
 
   const { 
-    email,
+    mail,
     password,
-    name,
-    adress,
-    age,
-    num,
+    nombre,
+    direccion,
+    edad,
+    numTelefono,
+    image
   } = formValues
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-      //await postUserRegister(formValues)
-    reset()
+    try {
+      let formData = new FormData()
+      formData.append("mail", mail)
+      formData.append("password", password)
+      formData.append("nombre", nombre)
+      formData.append("direccion", direccion)
+      formData.append("edad", edad)
+      formData.append("numTelefono", numTelefono)
+      formData.append("image", image)
+
+      await postUserRegister(formData).unwrap()
+
+      const response = await loginUser({ username: mail, password }).unwrap()
+
+      localStorage.setItem("userData", JSON.stringify( response ))
+
+      await createNewCart(nombre).unwrap()
+
+      navigate("/", {
+        replace: true
+      })
+
+    } catch(error) {
+      console.log("%%%%%", error)
+    }
   };
+
+  useEffect(() => {
+    if(user) {
+      navigate("/", {
+        replace: true
+      })
+    }
+  }, [])
 
   return (
     <div className="card shadow-lg">
@@ -45,9 +86,11 @@ const SignUpForm = () => {
                 <input 
                   type="email" 
                   className="form-control" 
-                  name="email"
-                  value={email}
-                  onChange={handleInputChange}/>
+                  name="mail"
+                  value={mail}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
 
               <div className="col-12 mb-3">
@@ -57,59 +100,74 @@ const SignUpForm = () => {
                   type="password" 
                   className="form-control" 
                   value={password}
-                  onChange={handleInputChange}/>              
+                  onChange={handleInputChange}
+                  required
+                />              
               </div>
 
               <div className="col-6 mb-3">
                 <label className="form-label">Nombre Completo</label>
                  <input 
-                  name="name"
+                  name="nombre"
                   className="form-control" 
-                  value={name}
-                  onChange={handleInputChange}/>
+                  value={nombre}
+                  onChange={handleInputChange}
+                  required
+                />              
               </div>
 
               <div className="col-6 mb-3">
                 <label className="form-label">Direccion</label>
                 <input 
-                  name="adress"
+                  name="direccion"
                   className="form-control" 
-                  value={adress}
-                  onChange={handleInputChange}/>
+                  value={direccion}
+                  onChange={handleInputChange}
+                  required
+                />              
               </div>
 
               <div className="col-6 mb-3">
                 <label className="form-label">Edad</label>
                 <input 
-                  name="age"
+                  name="edad"
                   className="form-control" 
-                  value={age}
-                  onChange={handleInputChange}/>
+                  value={edad}
+                  type="number"
+                  onChange={handleInputChange}
+                  required
+                />              
               </div>
 
               <div className="col-6 mb-3">
                 <label className="form-label">Numero de Telefono</label>
                 <input 
-                  name="num"
+                  name="numTelefono"
                   className="form-control" 
-                  value={num}
-                  onChange={handleInputChange}/>
+                  value={numTelefono}
+                  type="number"
+                  onChange={handleInputChange}
+                  required
+                />              
               </div>
 
               <div className="mb-3">
                 <label className="form-label">Ingrese Avatar</label>
                 <input 
-                  name="img"
+                  name="image"
                   className="form-control"
                   type="file"
-                  accept="image/*"
-                  onChange={handleInputChangeImg}/>
+                  accept="image/png"
+                  onChange={handleInputChangeImg}
+                  required
+                />              
               </div> 
 
+              <button type="submit" className="btn btn-primary col-3">
+                Registrarse
+              </button>
+                <span className="col-12 mt-2">* si ya tiene cuenta <Link to="/login">logearse</Link></span>
             </div>
-            <button type="submit" className="btn btn-primary">
-              Registrarse
-            </button>
           </div>
         </form>
       </div>
