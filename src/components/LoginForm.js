@@ -25,7 +25,8 @@ const LoginForm = () => {
     try {
       const response = await loginUser(formValues).unwrap() 
 
-      localStorage.setItem("userData", JSON.stringify( response ))
+      localStorage.setItem("userData", JSON.stringify( response.user ))
+      localStorage.setItem("access_token", JSON.stringify( response.token ))
 
       navigate("/", {
         replace: true

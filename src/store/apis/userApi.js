@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const userApi = createApi({
   reducerPath: "user",
   baseQuery: fetchBaseQuery({
-    baseUrl: `https://backend-ecommerce-coder.herokuapp.com/api/users`
+    baseUrl: `${process.env.REACT_APP_BACKEND_URL}/api/users`
   }),
 
   endpoints: (builder) => ({

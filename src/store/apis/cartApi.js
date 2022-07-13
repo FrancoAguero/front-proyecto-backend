@@ -3,7 +3,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const cartApi = createApi({
   reducerPath: "carts",
   baseQuery: fetchBaseQuery({
-    baseUrl: `https://backend-ecommerce-coder.herokuapp.com/api/carts`
+    baseUrl: `${process.env.REACT_APP_BACKEND_URL}/api/carts`,
+    //prepareHeaders: (headers, { getState }) => {
+      //headers.set("Authorization", `${localStorage.getItem("access_token")}`)
+      //return headers
+    //}
   }),
   tagTypes: ["Cart"],
   endpoints: (builder) => ({

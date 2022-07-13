@@ -1,17 +1,20 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { gql } from 'graphql-request'
+import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query'
 
 export const productsApi = createApi({
   reducerPath: "products",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `https://backend-ecommerce-coder.herokuapp.com/api/products`
+  baseQuery: graphqlRequestBaseQuery({
+    url: `${process.env.REACT_APP_BACKEND_URL}/api/products/graphql`,
   }),
 
   endpoints: (builder) => ({
 
     getAllProducts: builder.query({
       query: () => ({ 
-        url: "/",
-      })
+        document: gql`{ listAll { id title price description photoUrl stock } } `
+      }),
+      transformResponse: (response) => response.listAll
     })
 
   })

@@ -50,9 +50,10 @@ const SignUpForm = () => {
 
       const response = await loginUser({ username: mail, password }).unwrap()
 
-      localStorage.setItem("userData", JSON.stringify( response ))
+      localStorage.setItem("userData", JSON.stringify( response.user ))
+      localStorage.setItem("access_token", JSON.stringify( response.token ))
 
-      await createNewCart(nombre).unwrap()
+      await createNewCart(mail).unwrap()
 
       navigate("/", {
         replace: true

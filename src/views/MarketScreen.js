@@ -18,13 +18,12 @@ const SpinnerContainer = styled.div`
 `
 
 const MarketScreen = () => {
-
   const { data:dataProducts, error:errorProducts, isLoading:isLoadingProducts, refetch  } = useGetAllProductsQuery()  
 
-
+  console.log(dataProducts)
   return (
+    <div className="row">
     <div className="container" >
-      <div className="row">
         {
           !isLoadingProducts ?
             <ProductList data={dataProducts}/> 

@@ -23,6 +23,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("userData")
+    localStorage.removeItem("access_token")
     navigate('/login', {
       replace: true
     })
@@ -58,12 +59,19 @@ const Navbar = () => {
       <div className="navbar-collapse collapse w-100 order-3 dual-collapse d-flex justify-content-end">
         <ul className="navbar-nav ml-auto">
 
+          <Link 
+            className="nav-item nav-link position-relative"
+            to="/atencion-cliente"
+          >
+            Atencion al Cliente
+          </Link>
+
           <Link
             className="nav-item nav-link position-relative"
             to="/cart"
           >
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              { !isLoading ? data[0].products.length : "..." }
+              { !isLoading ? data[0]?.products.length : "..." }
             </span>
             <i className="bi bi-cart"/>
           </Link>

@@ -51,9 +51,9 @@ const ProductList = ({ data:products }) => {
     return (
         <div className="container-fluid">
             <div className="row">
-                {data && data.slice(currentPage, currentPage + 6).map((product) => (
+                {data.length > 0 ? data.slice(currentPage, currentPage + 6).map((product) => (
                     <Product key={product.id} {...product}/>
-                ))}
+                )) : <h2>no hay datos</h2>}
             </div>
         </div>
     )
